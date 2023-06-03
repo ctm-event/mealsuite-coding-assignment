@@ -1,0 +1,17 @@
+.app__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.app__backdrop > .app__spinner {
+  width: 5rem;
+  height: 5rem;
+}

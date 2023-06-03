@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+a:hover {
+  text-decoration: none;
+}
+
+.custom-switch input,
+.custom-switch label {
+  cursor: pointer;
+}

@@ -1,6 +1,6 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
-import {AppComponent} from './app.component';
-import {BackendService} from "./backend.service";
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { AppComponent } from './app.component';
+import { BackendService } from "./backend.service";
 
 describe('AppComponent', () => {
     beforeEach(waitForAsync(() => {

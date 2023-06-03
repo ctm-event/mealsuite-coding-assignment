@@ -1,0 +1,7 @@
+.task__item--completed td:nth-child(-n+2) {
+  text-decoration: line-through;
+}
+.task-list__task-edit-button {
+  border: none;
+  background: none;
+}

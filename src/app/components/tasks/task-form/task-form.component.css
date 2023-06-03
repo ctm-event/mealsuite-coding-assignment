@@ -1,0 +1,9 @@
+.form-group.invalid input[type='text'] {
+  border-color: #dc3545;
+}
+.form-group.invalid input[type='text']:focus {
+  box-shadow: none;
+}
+.form-group.invalid .invalid-feedback {
+  display: block !important;
+}

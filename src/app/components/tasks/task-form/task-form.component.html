@@ -1,0 +1,79 @@
+<div class="card mb-3">
+  <div class="card-header">
+    {{ isEditMode ? 'Edit Task' : 'New Task' }}
+  </div>
+  <div class="card-body">
+    <form (submit)="onSubmit(ngForm)" [formGroup]="form" #ngForm="ngForm">
+      <div
+        class="form-group"
+        [ngClass]="{
+          invalid: ngForm.submitted && form.get('description').invalid
+        }"
+      >
+        <label for="description">Description</label>
+        <input
+          type="text"
+          class="form-control"
+          id="description"
+          formControlName="description"
+          aria-describedby="description"
+          #descElm
+        />
+        <div class="invalid-feedback">This field is mandatory</div>
+      </div>
+
+      <ng-container *ngIf="isEditMode">
+        <div class="form-group">
+          <label for="assigneeId">Assignee</label>
+          <select
+            class="custom-select custom-select-sm"
+            id="assigneeId"
+            name="assigneeId"
+            formControlName="assigneeId"
+          >
+            <option [value]="null">Unassigned</option>
+            <option
+              *ngFor="let user of users$ | async"
+              [selected]="user.id === task.assigneeId"
+              [value]="user.id"
+            >
+              {{ user.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group custom-control custom-switch">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="completed"
+            formControlName="completed"
+          />
+          <label class="custom-control-label" for="completed">Completed</label>
+        </div>
+      </ng-container>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isSubmitting | async"
+      >
+        Save
+        <span
+          *ngIf="isSubmitting | async"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      </button>
+      <button
+        [disabled]="isSubmitting | async"
+        type="button"
+        class="btn btn-danger ml-1"
+        (click)="onCancel()"
+      >
+        Close
+      </button>
+    </form>
+  </div>
+</div>

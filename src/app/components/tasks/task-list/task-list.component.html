@@ -1,0 +1,112 @@
+<div class="row">
+  <div class="col-7">
+    <div class="card">
+      <div class="card-header">
+        Task List
+        <div class="float-right d-flex">
+          <select
+            class="custom-select custom-select-sm mr-2"
+            [ngClass]="{ 'text-danger': filterAssignee.value !== '' }"
+            id="filter-assignee"
+            name="filter-assignee"
+            (change)="setFilter('assigneeId', $event.target.value)"
+            #filterAssignee
+          >
+            <option value="">All Assignee</option>
+            <option [value]="null">Unassigned</option>
+            <option *ngFor="let user of users$ | async" [value]="user.id">
+              {{ user.name }}
+            </option>
+          </select>
+          <select
+            class="custom-select custom-select-sm"
+            [ngClass]="{ 'text-danger': filterCompleted.value !== '' }"
+            id="filter-completed"
+            name="filter-completed"
+            (change)="setFilter('completed', $event.target.value)"
+            #filterCompleted
+          >
+            <option value="">All Status</option>
+            <option [value]="true">Completed</option>
+            <option [value]="false">Incompleted</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped mt-3">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Description</th>
+              <th scope="col">Assignee</th>
+              <th scope="col" style="text-align: right;">Completed</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              scope="row"
+              *ngFor="let t of tasks$ | async"
+              [ngClass]="{ 'task__item--completed': t.completed }"
+            >
+              <td>{{ t.id }}</td>
+              <td>{{ t.description }}</td>
+              <td>
+                <select
+                  class="custom-select custom-select-sm"
+                  id="assigneeId"
+                  name="assigneeId"
+                  (change)="assign(t.id, $event.target.value)"
+                  [disabled]="(submitting | async) || t.completed"
+                >
+                  <option [value]="null">Unassigned</option>
+                  <option
+                    *ngFor="let user of users$ | async"
+                    [selected]="user.id == t.assigneeId"
+                    [value]="user.id"
+                  >
+                    {{ user.name }}
+                  </option>
+                </select>
+              </td>
+              <td align="right">
+                <div class="custom-control custom-switch">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    [checked]="t.completed"
+                    [disabled]="submitting | async"
+                    [id]="'completedSwitch-' + t.id"
+                    (click)="toggleCompleteStatus(t)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    [for]="'completedSwitch-' + t.id"
+                  ></label>
+                </div>
+              </td>
+              <td>
+                <button
+                  class="task-list__task-edit-button text-primary"
+                  [disabled]="submitting | async"
+                  [routerLink]="['/tasks', t.id]"
+                >
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-5">
+    <div class="col-12" *ngIf="!isShowTaskForm; else taskForm">
+      <button class="btn btn-primary" (click)="showTaskForm()">New Task</button>
+    </div>
+    <ng-template #taskForm>
+      <app-task-form (onCancelEvent)="hideTaskForm()"></app-task-form>
+    </ng-template>
+  </div>
+</div>

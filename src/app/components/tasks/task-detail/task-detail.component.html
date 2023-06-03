@@ -1,0 +1,18 @@
+<ng-container *ngIf="task$ | async; let task; else: taskNotFound">
+  <div class="row">
+    <div class="col-7">
+      <app-task-form
+        [task]="task"
+        (afterSubmitEvent)="goToList()"
+        (onCancelEvent)="goToList()"
+      ></app-task-form>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #taskNotFound>
+  <div class="alert alert-danger" role="alert">
+    Task not found. 
+    <a [routerLink]="['tasks']">Go to task list.</a>
+  </div>
+</ng-template>
