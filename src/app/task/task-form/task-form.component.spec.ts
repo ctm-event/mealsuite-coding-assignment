@@ -66,28 +66,4 @@ describe('TaskFormComponent', () => {
     const descElm = elm.query(By.css('input#description'));
     expect(descElm).toBeTruthy();
   });
-
-  // it('should display task list', () => {
-  //   TaskService.getTasks.and.returnValue(of(mockTasks));
-  //   fixture.detectChanges();
-  //   const taskElms = elm.queryAll(By.css('.task-item'));
-  //   expect(taskElms.length).toBe(2, 'Unexpected number of elements found');
-  // });
-
-  // it('should display add task form when click on New Task button', fakeAsync(() => {
-  //   spyOn(component, 'showTaskForm').and.callThrough();
-  //   fixture.detectChanges();
-
-  //   const newTaskBtn = elm.query(By.css('#new-task-btn'));
-  //   expect(newTaskBtn).toBeTruthy();
-
-  //   newTaskBtn.nativeElement.click();
-  //   expect(component.showTaskForm).toHaveBeenCalled();
-
-  //   fixture.detectChanges();
-  //   flush();
-
-  //   const taskForm = elm.query(By.css('app-task-form'));
-  //   expect(taskForm).toBeTruthy();
-  // }));
 });
