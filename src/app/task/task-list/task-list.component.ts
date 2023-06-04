@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  finalize,
-  map
-} from 'rxjs/operators';
-import { StoreService } from 'src/app/services/store.service';
-import { Task, TaskViewFilter } from 'src/app/task.type';
-import { User } from 'src/app/user.type';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
+import { TaskService } from 'src/app/services/task.service';
+import { UserService } from 'src/app/services/user.service';
+import { Task, TaskViewFilter } from 'src/app/shared/models/task.type';
+import { User } from 'src/app/shared/models/user.type';
 
 @Component({
   selector: 'app-task-list',
@@ -23,7 +21,10 @@ export class TaskListComponent implements OnInit {
     completed: ''
   };
 
-  constructor(private store: StoreService) {}
+  constructor(
+    private taskService: TaskService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     this.loadTasks();
@@ -38,30 +39,38 @@ export class TaskListComponent implements OnInit {
     this.isShowTaskForm = false;
   }
 
-  assign(taskId: number, userId: string) {
+  assign(taskId: number, userId: number) {
     this.submitting.next(true);
-    this.store
-      .assign(taskId, +userId)
+    this.taskService
+      .assign(taskId, userId)
       .pipe(finalize(() => this.submitting.next(false)))
-      .subscribe();
+      .subscribe((updatedTask) => {
+        if (!updatedTask) {
+          this.loadTasks();
+        }
+      });
   }
 
   toggleCompleteStatus(task: Task) {
     this.submitting.next(true);
-    const updateCompleteStatus = task.completed === false;
-    this.store
-      .toggleCompleteStatus(task.id, updateCompleteStatus)
+    const newValue = task.completed === false;
+    this.taskService
+      .toggleCompleteStatus(task.id, newValue)
       .pipe(finalize(() => this.submitting.next(false)))
-      .subscribe();
+      .subscribe((updatedTask) => {
+        if (!updatedTask) {
+          this.loadTasks();
+        }
+      });
   }
 
-  setFilter(fieldName: keyof TaskViewFilter, value: string) {
+  onFilterChange(fieldName: keyof TaskViewFilter, value: string) {
     this.viewFilter[fieldName] = value;
     this.applyFilter();
   }
 
   private applyFilter() {
-    let filteredTasks$ = this.store.getTasks();
+    let filteredTasks$ = this.taskService.getTasks();
     for (const field in this.viewFilter) {
       if (this.viewFilter[field] === '') continue;
       filteredTasks$ = filteredTasks$.pipe(
@@ -75,10 +84,10 @@ export class TaskListComponent implements OnInit {
   }
 
   private loadTasks() {
-    this.tasks$ = this.store.getTasks();
+    this.tasks$ = this.taskService.getTasks();
   }
 
   private loadUsers() {
-    this.users$ = this.store.getUsers();
+    this.users$ = this.userService.getUsers();
   }
 }

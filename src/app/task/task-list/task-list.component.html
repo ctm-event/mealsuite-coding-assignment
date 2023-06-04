@@ -9,7 +9,7 @@
             [ngClass]="{ 'text-danger': filterAssignee.value !== '' }"
             id="filter-assignee"
             name="filter-assignee"
-            (change)="setFilter('assigneeId', $event.target.value)"
+            (change)="onFilterChange('assigneeId', $event.target.value)"
             #filterAssignee
           >
             <option value="">All Assignee</option>
@@ -23,7 +23,7 @@
             [ngClass]="{ 'text-danger': filterCompleted.value !== '' }"
             id="filter-completed"
             name="filter-completed"
-            (change)="setFilter('completed', $event.target.value)"
+            (change)="onFilterChange('completed', $event.target.value)"
             #filterCompleted
           >
             <option value="">All Status</option>
@@ -39,12 +39,13 @@
               <th scope="col">#</th>
               <th scope="col">Description</th>
               <th scope="col">Assignee</th>
-              <th scope="col" style="text-align: right;">Completed</th>
+              <th scope="col" style="text-align: right">Completed</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             <tr
+              class="task-item"
               scope="row"
               *ngFor="let t of tasks$ | async"
               [ngClass]="{ 'task__item--completed': t.completed }"
@@ -103,7 +104,13 @@
 
   <div class="col-5">
     <div class="col-12" *ngIf="!isShowTaskForm; else taskForm">
-      <button class="btn btn-primary" (click)="showTaskForm()">New Task</button>
+      <button
+        id="new-task-btn"
+        class="btn btn-primary"
+        (click)="showTaskForm()"
+      >
+        New Task
+      </button>
     </div>
     <ng-template #taskForm>
       <app-task-form (onCancelEvent)="hideTaskForm()"></app-task-form>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
-import { Task } from './task.type';
-import { User } from './user.type';
+import { Observable, of, throwError, timer } from 'rxjs';
+import { delay, map, switchMap } from 'rxjs/operators';
+import { Task } from './shared/models/task.type';
+import { User } from './shared/models/user.type';
 
 /**
  * This service acts as a mock backend.
@@ -74,10 +74,12 @@ export class BackendService {
   }
 
   assign(taskId: number, userId: number) {
+    // return timer(1500).pipe(switchMap(() => throwError('Assign faild')));
     return this.update(taskId, { assigneeId: userId });
   }
 
   complete(taskId: number, completed: boolean) {
+    // return timer(1500).pipe(switchMap(() => throwError('Update status faild')));
     return this.update(taskId, { completed });
   }
 

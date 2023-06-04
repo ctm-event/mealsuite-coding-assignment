@@ -5,3 +5,6 @@
   border: none;
   background: none;
 }
+.task-list__task-edit-button[disabled] {
+  color: #bbb !important;
+}

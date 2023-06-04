@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { Observable, of, timer } from 'rxjs';
-import { delay, delayWhen, filter, skipUntil, tap } from 'rxjs/operators';
-import { StoreService } from 'src/app/services/store.service';
-import { Task } from 'src/app/task.type';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { TaskService } from 'src/app/services/task.service';
+import { Task } from 'src/app/shared/models/task.type';
 
 @Component({
   selector: 'app-task-detail',
@@ -13,7 +12,7 @@ export class TaskDetailComponent implements OnInit {
   task$: Observable<Task>;
 
   constructor(
-    private store: StoreService,
+    private store: TaskService,
     private route: ActivatedRoute,
     private router: Router
   ) {}

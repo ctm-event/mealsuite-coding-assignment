@@ -8,12 +8,18 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators
+} from '@angular/forms';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { StoreService } from 'src/app/services/store.service';
-import { Task, UpdateTaskPayload } from 'src/app/task.type';
-import { User } from 'src/app/user.type';
+import { TaskService } from 'src/app/services/task.service';
+import { UserService } from 'src/app/services/user.service';
+import { Task, UpdateTaskPayload } from 'src/app/shared/models/task.type';
+import { User } from 'src/app/shared/models/user.type';
 
 @Component({
   selector: 'app-task-form',
@@ -54,14 +60,18 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private store: StoreService) {}
+  constructor(
+    private fb: FormBuilder,
+    private taskService: TaskService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     this.initForm();
     if (this.isEditMode) {
       this.loadUsers();
     }
-    this.applyExtraState();
+    this.applyExtraBehaviors();
   }
 
   onSubmit(ngForm: FormGroupDirective) {
@@ -119,10 +129,10 @@ export class TaskFormComponent implements OnInit, OnDestroy {
   }
 
   private loadUsers() {
-    this.users$ = this.store.getUsers();
+    this.users$ = this.userService.getUsers();
   }
 
-  private applyExtraState() {
+  private applyExtraBehaviors() {
     this.setFocusOnDesc();
   }
 
@@ -132,21 +142,21 @@ export class TaskFormComponent implements OnInit, OnDestroy {
 
   private create(): Observable<Task> {
     const description = this.form.get('description').value;
-    return this.store.createTask({ description });
+    return this.taskService.createTask({ description });
   }
 
   private update(): Observable<Task> {
     const updates: UpdateTaskPayload = this.form.value;
-    return this.store.updateTask(this.task.id, updates);
+    return this.taskService.updateTask(this.task.id, updates);
   }
 
   private beforeSubmitHook() {
+    this.form.disable();
     this.isSubmitting.next(true);
-    this.form.get('description').disable();
   }
 
   private afterSubmitHook() {
     this.isSubmitting.next(false);
-    this.form.get('description').enable();
+   this.form.enable();
   }
 }
