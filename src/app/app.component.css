@@ -15,3 +15,12 @@
   width: 5rem;
   height: 5rem;
 }
+
+.page-footer {
+  bottom: 0;
+  position: fixed;
+  left: 0;
+  width: 100%;
+  text-align: left;
+  padding: 16px;
+}
